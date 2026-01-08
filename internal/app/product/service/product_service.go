@@ -2,25 +2,23 @@ package service
 
 import (
 	"videocall/internal/app/product/repository"
-	"videocall/schema"
+	"videocall/internal/app/product/schema"
 )
 
 type productService struct {
 	repo repository.ProductRepositoryInterface
 }
 
-func NewProductService(repo repository.ProductRepositoryInterface) *productService {
-	return &productService{
-		repo: repo,
-	}
+func NewProductService(repo repository.ProductRepositoryInterface) ProductServiceInterface {
+	return &productService{repo: repo}
 }
 
-func (ser *productService) GetAllProduct() (*[]schema.Product, error) {
+func (ser *productService) GetAllProduct() ([]*schema.Product, error) {
 	var product, err = ser.repo.GetAllProduct()
 	if err != nil {
 		return nil, err
 	}
-	return &product, nil
+	return product, nil
 }
 
 func (ser *productService) GetProductById(id int) (*schema.Product, error) {
@@ -29,11 +27,11 @@ func (ser *productService) GetProductById(id int) (*schema.Product, error) {
 		return nil, err
 	}
 
-	return &product, nil
+	return product, nil
 }
 
-func (ser *productService) CreateProduct(product *schema.Product) error {
-	var err = ser.repo.CreateProduct(*product)
+func (ser *productService) CreateProduct(product *schema.ProductRequest) error {
+	var err = ser.repo.CreateProduct(product)
 	if err != nil {
 		return err
 	}
@@ -42,7 +40,7 @@ func (ser *productService) CreateProduct(product *schema.Product) error {
 }
 
 func (ser *productService) UpdateProduct(id int, product *schema.Product) error {
-	var err = ser.repo.UpdateProduct(id, *product)
+	var err = ser.repo.UpdateProduct(id, product)
 	if err != nil {
 		return err
 	}
