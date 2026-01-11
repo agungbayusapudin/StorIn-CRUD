@@ -14,9 +14,9 @@ func NewProductRouters(ctrl *controller.ProductController) *ProductRouter {
 }
 
 func (r *ProductRouter) RegisterRouter(mux *http.ServeMux) {
-	mux.HandleFunc("GET /", r.controller.GetAllProduct)
-	mux.HandleFunc("GET /{id}", r.controller.GetProductById)
-	mux.HandleFunc("POST /", r.controller.CreateProduct)
-	mux.HandleFunc("PUT /{id}", r.controller.UpdateProduct)
-	mux.HandleFunc("DELETE /{id}", r.controller.DeleteProduct)
+	mux.HandleFunc("GET /product", r.controller.GetAllProduct)
+	mux.HandleFunc("GET /product/{id}", r.controller.GetProductById)
+	mux.HandleFunc("POST /product", r.controller.CreateProduct)
+	mux.HandleFunc("PUT /product/{id}", r.controller.UpdateProduct)
+	mux.HandleFunc("DELETE /product/{id}", r.controller.DeleteProduct)
 }

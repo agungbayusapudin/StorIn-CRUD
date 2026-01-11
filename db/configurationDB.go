@@ -1,5 +1,7 @@
 package config
 
+import "os"
+
 type EnvDbConvig struct {
 	DBPort     string
 	DBHost     string
@@ -10,12 +12,19 @@ type EnvDbConvig struct {
 
 func NewEnvDbConfig() *EnvDbConvig {
 	return &EnvDbConvig{
-		DBPort:     "DB_PORT",
-		DBHost:     "DB_HOST",
-		DBUser:     "DB_USER",
-		DBPassword: "DB_PASSWORD",
-		DBName:     "DB_NAME",
+		DBPort:     getEnv("DB_PORT", "5432"),
+		DBHost:     getEnv("DB_HOST", "localhost"),
+		DBUser:     getEnv("DB_USER", "postgres"),
+		DBPassword: getEnv("DB_PASSWORD", "password"),
+		DBName:     getEnv("DB_NAME", "videocall_db"),
 	}
+}
+
+func getEnv(key, defaultValue string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return defaultValue
 }
 
 func (c *EnvDbConvig) GetUsernameDb() string {
