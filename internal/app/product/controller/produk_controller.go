@@ -26,6 +26,7 @@ func (ctrl *ProductController) GetAllProduct(w http.ResponseWriter, r *http.Requ
 	var product, err = ctrl.service.GetAllProduct()
 	if err != nil {
 		pkg.WriteResponse(w, http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
+		return
 	}
 
 	pkg.WriteResponse(w, http.StatusOK, product)
@@ -34,6 +35,7 @@ func (ctrl *ProductController) GetAllProduct(w http.ResponseWriter, r *http.Requ
 func (ctrl *ProductController) GetProductById(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		pkg.WriteResponse(w, http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
+		return
 	}
 
 	idStr := r.PathValue("id")
@@ -41,11 +43,13 @@ func (ctrl *ProductController) GetProductById(w http.ResponseWriter, r *http.Req
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		pkg.WriteResponse(w, http.StatusBadRequest, map[string]string{"error": "invalid product id"})
+		return
 	}
 
 	product, err := ctrl.service.GetProductById(id)
 	if err != nil {
 		pkg.WriteResponse(w, http.StatusNotFound, map[string]string{"error": "product not found"})
+		return
 	}
 
 	pkg.WriteResponse(w, http.StatusOK, product)
@@ -54,6 +58,7 @@ func (ctrl *ProductController) GetProductById(w http.ResponseWriter, r *http.Req
 func (ctrl *ProductController) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		pkg.WriteResponse(w, http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
+		return
 	}
 
 	var newProductRequest *schema.ProductRequest
@@ -61,11 +66,13 @@ func (ctrl *ProductController) CreateProduct(w http.ResponseWriter, r *http.Requ
 	err := pkg.DecodeResposne(r, newProductRequest)
 	if err != nil {
 		pkg.WriteResponse(w, http.StatusBadRequest, newProductRequest)
+		return
 	}
 
 	err = ctrl.service.CreateProduct(newProductRequest)
 	if err != nil {
 		pkg.WriteResponse(w, http.StatusInternalServerError, map[string]string{"error": "nternal Server Error"})
+		return
 	}
 
 	pkg.WriteResponse(w, http.StatusCreated, map[string]string{"status": "berhasil created"})
@@ -74,12 +81,14 @@ func (ctrl *ProductController) CreateProduct(w http.ResponseWriter, r *http.Requ
 func (ctrl *ProductController) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
 		pkg.WriteResponse(w, http.StatusMethodNotAllowed, map[string]string{"error": "Method Not Allowed"})
+		return
 	}
 
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		pkg.WriteResponse(w, http.StatusNotFound, map[string]string{"error": "Url Path salah"})
+		return
 	}
 
 	var newProductUpdated *schema.Product
@@ -87,11 +96,13 @@ func (ctrl *ProductController) UpdateProduct(w http.ResponseWriter, r *http.Requ
 	err = pkg.DecodeResposne(r, newProductUpdated)
 	if err != nil {
 		pkg.WriteResponse(w, http.StatusBadRequest, map[string]string{"error": "Input Salah"})
+		return
 	}
 
 	err = ctrl.service.UpdateProduct(id, newProductUpdated)
 	if err != nil {
 		pkg.WriteResponse(w, http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
+		return
 	}
 
 	pkg.WriteResponse(w, http.StatusOK, newProductUpdated)

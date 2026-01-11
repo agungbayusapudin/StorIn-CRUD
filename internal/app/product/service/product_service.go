@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"videocall/internal/app/product/repository"
 	"videocall/internal/app/product/schema"
 )
@@ -14,10 +15,14 @@ func NewProductService(repo repository.ProductRepositoryInterface) ProductServic
 }
 
 func (ser *productService) GetAllProduct() ([]*schema.Product, error) {
+	fmt.Println("MASUK KE DALAM SERVICE")
 	var product, err = ser.repo.GetAllProduct()
+
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Println("Berhasil Mendapatkan product")
 	return product, nil
 }
 
@@ -32,6 +37,7 @@ func (ser *productService) GetProductById(id int) (*schema.Product, error) {
 
 func (ser *productService) CreateProduct(product *schema.ProductRequest) error {
 	var err = ser.repo.CreateProduct(product)
+	print("Masuk ke dalam sini")
 	if err != nil {
 		return err
 	}

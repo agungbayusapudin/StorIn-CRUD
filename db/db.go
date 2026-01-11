@@ -3,10 +3,12 @@ package config
 import (
 	"database/sql"
 	"fmt"
+
+	_ "github.com/lib/pq"
 )
 
 func ConnectToDb(config EnvDbConvig) (*sql.DB, error) {
-	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", config.GetUsernameDb(), config.GetPasswordDb(), config.GetHostDb(), config.GetPortDb(), config.GetNameDb())
+	connectionString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", config.GetUsernameDb(), config.GetPasswordDb(), config.GetHostDb(), config.GetPortDb(), config.GetNameDb())
 
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {

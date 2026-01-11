@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	config "videocall/db"
 	"videocall/internal/app/product/controller"
@@ -11,7 +12,10 @@ import (
 )
 
 func main() {
-	db, _ := config.ConnectToDb(*config.NewEnvDbConfig())
+	db, err := config.ConnectToDb(*config.NewEnvDbConfig())
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// repository (inject db)
 	productRepository := repository.NewProductRepository(db)

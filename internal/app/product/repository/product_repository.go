@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"videocall/internal/app/product/schema"
 )
 
@@ -16,16 +17,24 @@ func NewProductRepository(db *sql.DB) ProductRepositoryInterface {
 func (repo *productRepository) GetAllProduct() ([]*schema.Product, error) {
 	var result []*schema.Product
 
-	stmt := "SELECT id, name, price FROM products"
+	if repo.db == nil {
+		fmt.Println("Database nul")
+	}
+
+	fmt.Println("Melakukan query")
+	stmt := "select * from products"
 	rows, err := repo.db.Query(stmt)
 	if err != nil {
+		fmt.Println("Terjadi error di query:", err)
 		return nil, err
 	}
+
 	defer rows.Close()
 
+	fmt.Println("Melakukan pembalian data ")
 	for rows.Next() {
 		var product schema.Product
-		err := rows.Scan(&product.ID, &product.ProductName, &product.Price)
+		err := rows.Scan(&product.ID, &product.ProductName, &product.Price, &product.Stock, &product.Description, &product.CreatedAt, &product.CreatedAtUnix, &product.UpdatedAt, &product.UpdatedAtUnix)
 		if err != nil {
 			return nil, err
 		}
