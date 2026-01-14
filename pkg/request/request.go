@@ -6,15 +6,10 @@ import (
 	"net/http"
 )
 
-func DecodeRequest(r *http.Request, v interface{}) error {
+func DecodeRequest(r *http.Request, data interface{}) error {
 	if r.Header.Get("Content-Type") != "application/json" {
 		return errors.New("content-type harus berbentuk aplication/json")
 	}
 
-	decode := json.NewDecoder(r.Body)
-	decode.DisallowUnknownFields()
-	if err := decode.Decode(v); err != nil {
-		return err
-	}
-	return nil
+	return json.NewDecoder(r.Body).Decode(data)
 }

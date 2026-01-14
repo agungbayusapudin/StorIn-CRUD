@@ -62,21 +62,21 @@ func (ctrl *ProductController) CreateProduct(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	var newProductRequest *schema.ProductRequest
+	var newProductRequest schema.ProductRequest
 
-	err := request.DecodeRequest(r, newProductRequest)
+	err := request.DecodeRequest(r, &newProductRequest)
 	if err != nil {
 		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
 		return
 	}
 
-	err = ctrl.service.CreateProduct(newProductRequest)
+	err = ctrl.service.CreateProduct(&newProductRequest)
 	if err != nil {
 		response.WriteResponse(w, r, http.StatusInternalServerError, response.CodeInternalError, response.GetMessage(response.CodeInternalError), nil)
 		return
 	}
 
-	response.WriteResponse(w, r, http.StatusCreated, response.CodeSuccess, response.GetMessage(response.CodeSuccess), newProductRequest)
+	response.WriteResponse(w, r, http.StatusCreated, response.CodeSuccess, response.GetMessage(response.CodeSuccess), map[string]string{"status": "berhasil membuat product"})
 }
 
 func (ctrl *ProductController) UpdateProduct(w http.ResponseWriter, r *http.Request) {
@@ -92,21 +92,21 @@ func (ctrl *ProductController) UpdateProduct(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	var newProductUpdated *schema.Product
+	var newProductUpdated schema.Product
 
-	err = request.DecodeRequest(r, newProductUpdated)
+	err = request.DecodeRequest(r, &newProductUpdated)
 	if err != nil {
 		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
 		return
 	}
 
-	err = ctrl.service.UpdateProduct(id, newProductUpdated)
+	err = ctrl.service.UpdateProduct(id, &newProductUpdated)
 	if err != nil {
 		response.WriteResponse(w, r, http.StatusInternalServerError, response.CodeInternalError, response.GetMessage(response.CodeInternalError), nil)
 		return
 	}
 
-	response.WriteResponse(w, r, http.StatusOK, response.CodeSuccess, response.GetMessage(response.CodeSuccess), newProductUpdated)
+	response.WriteResponse(w, r, http.StatusOK, response.CodeSuccess, response.GetMessage(response.CodeSuccess), map[string]string{"status": "Product Berhasil Di Update"})
 }
 
 func (ctrl *ProductController) DeleteProduct(w http.ResponseWriter, r *http.Request) {
