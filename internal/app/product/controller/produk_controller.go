@@ -5,7 +5,8 @@ import (
 	"strconv"
 	"videocall/internal/app/product/schema"
 	"videocall/internal/app/product/service"
-	"videocall/pkg"
+	"videocall/pkg/request"
+	"videocall/pkg/response"
 )
 
 type ProductController struct {
@@ -20,21 +21,21 @@ func NewProductController(service service.ProductServiceInterface) *ProductContr
 
 func (ctrl *ProductController) GetAllProduct(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		pkg.WriteResponse(w, http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
+
 	}
 
 	var product, err = ctrl.service.GetAllProduct()
 	if err != nil {
-		pkg.WriteResponse(w, http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
+		response.WriteResponse(w, r, http.StatusInternalServerError, response.CodeInternalError, response.GetMessage(response.CodeInternalError), nil)
 		return
 	}
 
-	pkg.WriteResponse(w, http.StatusOK, product)
+	response.WriteResponse(w, r, http.StatusOK, response.CodeSuccess, response.GetMessage(response.CodeSuccess), product)
 }
 
 func (ctrl *ProductController) GetProductById(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		pkg.WriteResponse(w, http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
+		response.WriteResponse(w, r, http.StatusMethodNotAllowed, response.CodeMethodNotAllowed, response.GetMessage(response.CodeMethodNotAllowed), nil)
 		return
 	}
 
@@ -42,88 +43,88 @@ func (ctrl *ProductController) GetProductById(w http.ResponseWriter, r *http.Req
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		pkg.WriteResponse(w, http.StatusBadRequest, map[string]string{"error": "invalid product id"})
+		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
 		return
 	}
 
 	product, err := ctrl.service.GetProductById(id)
 	if err != nil {
-		pkg.WriteResponse(w, http.StatusNotFound, map[string]string{"error": "product not found"})
+		response.WriteResponse(w, r, http.StatusNotFound, response.CodeNotFound, response.GetMessage(response.CodeNotFound), nil)
 		return
 	}
 
-	pkg.WriteResponse(w, http.StatusOK, product)
+	response.WriteResponse(w, r, http.StatusOK, response.CodeSuccess, response.GetMessage(response.CodeSuccess), product)
 }
 
 func (ctrl *ProductController) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		pkg.WriteResponse(w, http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
+		response.WriteResponse(w, r, http.StatusMethodNotAllowed, response.CodeMethodNotAllowed, response.GetMessage(response.CodeMethodNotAllowed), nil)
 		return
 	}
 
 	var newProductRequest *schema.ProductRequest
 
-	err := pkg.DecodeResposne(r, newProductRequest)
+	err := request.DecodeRequest(r, newProductRequest)
 	if err != nil {
-		pkg.WriteResponse(w, http.StatusBadRequest, newProductRequest)
+		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
 		return
 	}
 
 	err = ctrl.service.CreateProduct(newProductRequest)
 	if err != nil {
-		pkg.WriteResponse(w, http.StatusInternalServerError, map[string]string{"error": "nternal Server Error"})
+		response.WriteResponse(w, r, http.StatusInternalServerError, response.CodeInternalError, response.GetMessage(response.CodeInternalError), nil)
 		return
 	}
 
-	pkg.WriteResponse(w, http.StatusCreated, map[string]string{"status": "berhasil created"})
+	response.WriteResponse(w, r, http.StatusCreated, response.CodeSuccess, response.GetMessage(response.CodeSuccess), newProductRequest)
 }
 
 func (ctrl *ProductController) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
-		pkg.WriteResponse(w, http.StatusMethodNotAllowed, map[string]string{"error": "Method Not Allowed"})
+		response.WriteResponse(w, r, http.StatusMethodNotAllowed, response.CodeMethodNotAllowed, response.GetMessage(response.CodeMethodNotAllowed), nil)
 		return
 	}
 
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		pkg.WriteResponse(w, http.StatusNotFound, map[string]string{"error": "Url Path salah"})
+		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
 		return
 	}
 
 	var newProductUpdated *schema.Product
 
-	err = pkg.DecodeResposne(r, newProductUpdated)
+	err = request.DecodeRequest(r, newProductUpdated)
 	if err != nil {
-		pkg.WriteResponse(w, http.StatusBadRequest, map[string]string{"error": "Input Salah"})
+		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
 		return
 	}
 
 	err = ctrl.service.UpdateProduct(id, newProductUpdated)
 	if err != nil {
-		pkg.WriteResponse(w, http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
+		response.WriteResponse(w, r, http.StatusInternalServerError, response.CodeInternalError, response.GetMessage(response.CodeInternalError), nil)
 		return
 	}
 
-	pkg.WriteResponse(w, http.StatusOK, newProductUpdated)
+	response.WriteResponse(w, r, http.StatusOK, response.CodeSuccess, response.GetMessage(response.CodeSuccess), newProductUpdated)
 }
 
 func (ctrl *ProductController) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
-		pkg.WriteResponse(w, http.StatusMethodNotAllowed, map[string]string{"error": "Method Not Allowed"})
+		response.WriteResponse(w, r, http.StatusMethodNotAllowed, response.CodeMethodNotAllowed, response.GetMessage(response.CodeMethodNotAllowed), nil)
 	}
 
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		pkg.WriteResponse(w, http.StatusBadRequest, map[string]string{"error": "Url Path salah"})
+		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
 	}
 
 	err = ctrl.service.DeleteProduct(id)
 	if err != nil {
-		pkg.WriteResponse(w, http.StatusInternalServerError, map[string]string{"error": "Status Internal Server Eror"})
+		response.WriteResponse(w, r, http.StatusInternalServerError, response.CodeInternalError, response.GetMessage(response.CodeInternalError), nil)
 	}
 
-	pkg.WriteResponse(w, http.StatusOK, map[string]string{"status": "Berhasil Detele Product"})
+	response.WriteResponse(w, r, http.StatusOK, response.CodeSuccess, response.GetMessage(response.CodeSuccess), map[string]string{"status": "berhasil delete"})
 
 }

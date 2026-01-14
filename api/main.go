@@ -9,6 +9,7 @@ import (
 	"videocall/internal/app/product/repository"
 	"videocall/internal/app/product/routers"
 	"videocall/internal/app/product/service"
+	"videocall/middleware"
 )
 
 func main() {
@@ -34,6 +35,8 @@ func main() {
 	// mendaftarkan router product
 	productRouter.RegisterRouter(mux)
 
+	wraperMux := middleware.TraceMiddleware(mux)
+
 	fmt.Println("Server Berjalan Di Port 8000")
-	http.ListenAndServe(":8000", mux)
+	http.ListenAndServe(":8000", wraperMux)
 }
