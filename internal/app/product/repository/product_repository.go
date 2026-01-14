@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	"time"
 	"videocall/internal/app/product/schema"
 )
 
@@ -21,17 +22,14 @@ func (repo *productRepository) GetAllProduct() ([]*schema.Product, error) {
 		fmt.Println("Database nul")
 	}
 
-	fmt.Println("Melakukan query")
 	stmt := "select * from products"
 	rows, err := repo.db.Query(stmt)
 	if err != nil {
-		fmt.Println("Terjadi error di query:", err)
 		return nil, err
 	}
 
 	defer rows.Close()
 
-	fmt.Println("Melakukan pembalian data ")
 	for rows.Next() {
 		var product schema.Product
 		err := rows.Scan(&product.ID, &product.ProductName, &product.Price, &product.Stock, &product.Description, &product.CreatedAt, &product.CreatedAtUnix, &product.UpdatedAt, &product.UpdatedAtUnix)
@@ -47,7 +45,7 @@ func (repo *productRepository) GetAllProduct() ([]*schema.Product, error) {
 func (repo *productRepository) GetProductById(id int) (*schema.Product, error) {
 	var product schema.Product
 
-	stmt := "SELECT id, name, price FROM products WHERE id = $1"
+	stmt := "SELECT id, product_name, price FROM products WHERE id = $1"
 	err := repo.db.QueryRow(stmt, id).Scan(&product.ID, &product.ProductName, &product.Price)
 	if err != nil {
 		return nil, err
@@ -57,8 +55,19 @@ func (repo *productRepository) GetProductById(id int) (*schema.Product, error) {
 }
 
 func (repo *productRepository) CreateProduct(product *schema.ProductRequest) error {
-	stmt := "INSERT INTO products (name, price) VALUES ($1, $2)"
-	_, err := repo.db.Exec(stmt, product.ProductName, product.Price)
+	stmt := "INSERT INTO products (product_name, price, stock, description, created_at, created_at_unix, updated_at, updated_at_unix) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
+	_, err := repo.db.Exec(stmt,
+		product.ProductName,
+		product.Price,
+		product.Stock,
+		product.Description,
+		time.Now(),
+		time.Now().UTC().UnixMilli(),
+		time.Now(),
+		time.Now().UTC().UnixMilli(),
+	)
+
+	fmt.Println("SELESAI REPOSITORY")
 	if err != nil {
 		return err
 	}
@@ -66,7 +75,7 @@ func (repo *productRepository) CreateProduct(product *schema.ProductRequest) err
 }
 
 func (repo *productRepository) UpdateProduct(id int, product *schema.Product) error {
-	stmt := "UPDATE products SET name = $1, price = $2 WHERE id = $3"
+	stmt := "UPDATE products SET product_name = $1, price = $2 WHERE id = $3"
 	_, err := repo.db.Exec(stmt, product.ProductName, product.Price, id)
 	if err != nil {
 		return err
