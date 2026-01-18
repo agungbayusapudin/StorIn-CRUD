@@ -21,7 +21,7 @@ func NewProductController(service service.ProductServiceInterface) *ProductContr
 
 func (ctrl *ProductController) GetAllProduct(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-
+		response.WriteResponse(w, r, http.StatusMethodNotAllowed, response.CodeMethodNotAllowed, response.GetMessage(response.CodeMethodNotAllowed), nil)
 	}
 
 	var product, err = ctrl.service.GetAllProduct()

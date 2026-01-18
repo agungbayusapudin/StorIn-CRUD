@@ -35,12 +35,13 @@ func (repo *userRepository) CreateUsers(user *schema.Users) error {
 	return nil
 }
 
-func (repo *userRepository) UpdateUsers(user *schema.UserRequest) error {
-	stmt := "UPDATE users SET (username, phone) VALUES ($1, $2)"
+func (repo *userRepository) UpdateUsers(id int, user *schema.UserRequest) error {
+	stmt := "UPDATE users SET (username, phone) VALUES ($1, $2) WHERE id = $3"
 
 	_, err := repo.db.Exec(stmt,
 		user.Username,
 		user.Phone,
+		id,
 	)
 	if err != nil {
 		return err

@@ -5,10 +5,8 @@ import (
 	"log"
 	"net/http"
 	config "videocall/db"
-	"videocall/internal/app/product/controller"
-	"videocall/internal/app/product/repository"
-	"videocall/internal/app/product/routers"
-	"videocall/internal/app/product/service"
+	"videocall/internal/app"
+
 	"videocall/middleware"
 )
 
@@ -18,22 +16,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// repository (inject db)
-	productRepository := repository.NewProductRepository(db)
-
-	// services (inject db)
-	productService := service.NewProductService(productRepository)
-
-	// controller (inject db)
-	productController := controller.NewProductController(productService)
-
-	// router (inject controller)
-	productRouter := routers.NewProductRouters(productController)
-
-	mux := http.NewServeMux()
-
-	// mendaftarkan router product
-	productRouter.RegisterRouter(mux)
+	mux := app.InitContainer(db)
 
 	wraperMux := middleware.TraceMiddleware(mux)
 
