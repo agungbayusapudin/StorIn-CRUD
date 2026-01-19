@@ -14,9 +14,9 @@ func NewUsersRepository(db *sql.DB) UsersRepositoryInterface {
 	return &userRepository{db: db}
 }
 
-func (repo *userRepository) CreateUsers(user *schema.Users) error {
+func (repo *userRepository) CreateUsers(user *schema.UserRequest) error {
 
-	stmt := "insert into users (first_name, last_name, username, phone, created_at, created_at_unix, updated_at, updated_at_unix) values ($1, $2, $3, $4, $5, $6, $7)"
+	stmt := "insert into users (first_name, last_name, username, phone, created_at, created_at_unix, updated_at, updated_at_unix) values ($1, $2, $3, $4, $5, $6, $7, $8)"
 
 	_, err := repo.db.Exec(stmt,
 		user.FirstName,
@@ -36,7 +36,7 @@ func (repo *userRepository) CreateUsers(user *schema.Users) error {
 }
 
 func (repo *userRepository) UpdateUsers(id int, user *schema.UserRequest) error {
-	stmt := "UPDATE users SET (username, phone) VALUES ($1, $2) WHERE id = $3"
+	stmt := "UPDATE users SET username = $1, phone = $2 WHERE id = $3"
 
 	_, err := repo.db.Exec(stmt,
 		user.Username,

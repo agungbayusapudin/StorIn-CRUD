@@ -20,26 +20,31 @@ func NewUsersController(service services.UserServiceInterface) *UserController {
 func (ctrl *UserController) CreateUsers(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		response.WriteResponse(w, r, http.StatusMethodNotAllowed, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
+		return
 	}
 
-	var reqUser schema.Users
+	var reqUser schema.UserRequest
 
 	err := request.DecodeRequest(r, &reqUser)
 	if err != nil {
 		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
+
+		return
 	}
 
 	err = ctrl.service.CreateUsers(&reqUser)
 	if err != nil {
 		response.WriteResponse(w, r, http.StatusInternalServerError, response.CodeInternalError, response.GetMessage(response.CodeInternalError), nil)
+		return
 	}
 
-	response.WriteResponse(w, r, http.StatusCreated, response.CodeSuccess, response.GetMessage(response.CodeSuccess), nil)
+	response.WriteResponse(w, r, http.StatusCreated, response.CodeSuccess, response.GetMessage(response.CodeSuccess), map[string]string{"status": "Succesfully Created New User"})
 }
 
 func (ctrl *UserController) UpdateUsers(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
 		response.WriteResponse(w, r, http.StatusMethodNotAllowed, response.CodeMethodNotAllowed, response.GetMessage(response.CodeMethodNotAllowed), nil)
+		return
 	}
 
 	idStr := r.PathValue("id")
@@ -47,6 +52,7 @@ func (ctrl *UserController) UpdateUsers(w http.ResponseWriter, r *http.Request) 
 
 	if err != nil {
 		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
+		return
 	}
 
 	var reqUser schema.UserRequest
@@ -54,11 +60,13 @@ func (ctrl *UserController) UpdateUsers(w http.ResponseWriter, r *http.Request) 
 	err = request.DecodeRequest(r, &reqUser)
 	if err != nil {
 		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
+		return
 	}
 
 	err = ctrl.service.UpdateUsers(id, &reqUser)
 	if err != nil {
 		response.WriteResponse(w, r, http.StatusInternalServerError, response.CodeInternalError, response.GetMessage(response.CodeInternalError), nil)
+		return
 	}
 
 	response.WriteResponse(w, r, http.StatusCreated, response.CodeSuccess, response.GetMessage(response.CodeSuccess), nil)
@@ -68,52 +76,60 @@ func (ctrl *UserController) UpdateUsers(w http.ResponseWriter, r *http.Request) 
 func (ctrl *UserController) DeleteUsers(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
 		response.WriteResponse(w, r, http.StatusMethodNotAllowed, response.CodeMethodNotAllowed, response.GetMessage(response.CodeMethodNotAllowed), nil)
+		return
 	}
 
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
+		return
 	}
 
 	err = ctrl.service.DeleteUsers(id)
 	if err != nil {
-		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
+		response.WriteResponse(w, r, http.StatusInternalServerError, response.CodeInternalError, response.GetMessage(response.CodeInternalError), nil)
+		return
 	}
 
 	response.WriteResponse(w, r, http.StatusCreated, response.CodeSuccess, response.GetMessage(response.CodeSuccess), nil)
 }
 
 func (ctrl *UserController) GetUserById(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodDelete {
+	if r.Method != http.MethodGet {
 		response.WriteResponse(w, r, http.StatusMethodNotAllowed, response.CodeMethodNotAllowed, response.GetMessage(response.CodeMethodNotAllowed), nil)
+		return
 	}
 
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
+		return
 	}
 
 	userData, err := ctrl.service.GetUserById(id)
 	if err != nil {
-		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
+		response.WriteResponse(w, r, http.StatusInternalServerError, response.CodeInternalError, response.GetMessage(response.CodeInternalError), nil)
+		return
 	}
 
-	response.WriteResponse(w, r, http.StatusCreated, response.CodeSuccess, response.GetMessage(response.CodeSuccess), &userData)
+	response.WriteResponse(w, r, http.StatusOK, response.CodeSuccess, response.GetMessage(response.CodeSuccess), &userData)
 }
 
 func (ctrl *UserController) GetAllUser(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method != http.MethodDelete {
+	if r.Method != http.MethodGet {
 		response.WriteResponse(w, r, http.StatusMethodNotAllowed, response.CodeMethodNotAllowed, response.GetMessage(response.CodeMethodNotAllowed), nil)
+		return
 	}
 
-	userData, err := ctrl.service.GetAllUser()
+	var userData, err = ctrl.service.GetAllUser()
 	if err != nil {
-		response.WriteResponse(w, r, http.StatusBadRequest, response.CodeBadRequest, response.GetMessage(response.CodeBadRequest), nil)
+		response.WriteResponse(w, r, http.StatusInternalServerError, response.CodeInternalError, response.GetMessage(response.CodeInternalError), nil)
+		return
 	}
 
-	response.WriteResponse(w, r, http.StatusCreated, response.CodeSuccess, response.GetMessage(response.CodeSuccess), userData)
+	response.WriteResponse(w, r, http.StatusOK, response.CodeSuccess, response.GetMessage(response.CodeSuccess), userData)
 
 }

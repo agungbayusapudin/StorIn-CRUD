@@ -13,7 +13,7 @@ func NewUserServices(repo repository.UsersRepositoryInterface) UserServiceInterf
 	return &userServices{repo: repo}
 }
 
-func (serv *userServices) CreateUsers(users *schema.Users) error {
+func (serv *userServices) CreateUsers(users *schema.UserRequest) error {
 	err := serv.repo.CreateUsers(users)
 	if err != nil {
 		return err
