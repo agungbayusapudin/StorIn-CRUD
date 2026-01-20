@@ -9,5 +9,4 @@ type AuthServiceInterface interface {
 	Login(userLoginRequest *schema.UserLoginRequest) (*userSchema.Users, error)
 	Register(userRegisterRequest *schema.UserRegisterRequest) (*userSchema.Users, error)
 	Logout(userID int) error
-	GenerateToken(userId int) (string, error)
 }

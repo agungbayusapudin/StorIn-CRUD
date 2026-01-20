@@ -4,6 +4,10 @@ import (
 	"database/sql"
 	"net/http"
 
+	authController "videocall/internal/app/auth/controller"
+	authRouters "videocall/internal/app/auth/routers"
+	authServices "videocall/internal/app/auth/services"
+
 	userController "videocall/internal/app/users/controller"
 	userRepo "videocall/internal/app/users/repository"
 	userRouters "videocall/internal/app/users/routers"
@@ -34,17 +38,24 @@ func InitContainer(db *sql.DB) *http.ServeMux {
 	uCtrl := userController.NewUsersController(uSvc)
 	userRouters.NewUserRouters(uCtrl).RegisterUserRouter(mux)
 
+	// injection masing-masing pada auth
+	authSvc := authServices.NewAuthService(uRepo)
+	authCtrl := authController.NewAuthController(authSvc)
+	authRouters.NewAuthRouters(authCtrl).RegisterAuthRouter(mux)
+
 	// injection masing-masing pada product
 	pRepo := prodRepo.NewProductRepository(db)
 	pSvc := prodService.NewProductService(pRepo)
 	pCtrl := prodController.NewProductController(pSvc)
 	prodRouters.NewProductRouters(pCtrl).RegisterRouter(mux)
 
+	// injection masing-masing pada order
 	oRepo := orderRepo.NewOrderRepository(db)
 	oSvc := orderService.NewOrderService(oRepo)
 	oCtrl := orderController.NewOrderControllerInterface(oSvc)
 	orderRouters.NewOrderRouters(oCtrl).RegisterOrderRouter(mux)
 
+	// injection masing-masing pada billing
 	billRepo := billingRepo.NewBillingRepository(db)
 	billSvc := billingService.NewBillingService(billRepo)
 	billCtrl := billingController.NewBillingController(billSvc)
