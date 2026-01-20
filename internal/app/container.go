@@ -1,0 +1,44 @@
+package app
+
+import (
+	"database/sql"
+	"net/http"
+
+	userController "videocall/internal/app/users/controller"
+	userRepo "videocall/internal/app/users/repository"
+	userRouters "videocall/internal/app/users/routers"
+	userServices "videocall/internal/app/users/services"
+
+	prodController "videocall/internal/app/product/controller"
+	prodRepo "videocall/internal/app/product/repository"
+	prodRouters "videocall/internal/app/product/routers"
+	prodService "videocall/internal/app/product/service"
+
+	orderController "videocall/internal/app/orders/controller"
+	orderRepo "videocall/internal/app/orders/repository"
+	orderRouters "videocall/internal/app/orders/routers"
+	orderService "videocall/internal/app/orders/services"
+)
+
+func InitContainer(db *sql.DB) *http.ServeMux {
+	mux := http.NewServeMux()
+
+	// injection masing-masing pada user
+	uRepo := userRepo.NewUsersRepository(db)
+	uSvc := userServices.NewUserServices(uRepo)
+	uCtrl := userController.NewUsersController(uSvc)
+	userRouters.NewUserRouters(uCtrl).RegisterUserRouter(mux)
+
+	// injection masing-masing pada product
+	pRepo := prodRepo.NewProductRepository(db)
+	pSvc := prodService.NewProductService(pRepo)
+	pCtrl := prodController.NewProductController(pSvc)
+	prodRouters.NewProductRouters(pCtrl).RegisterRouter(mux)
+
+	oRepo := orderRepo.NewOrderRepository(db)
+	oSvc := orderService.NewOrderService(oRepo)
+	oCtrl := orderController.NewOrderControllerInterface(oSvc)
+	orderRouters.NewOrderRouters(oCtrl).RegisterOrderRouter(mux)
+
+	return mux
+}
