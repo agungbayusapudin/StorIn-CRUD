@@ -6,7 +6,7 @@ import (
 )
 
 type AuthServiceInterface interface {
-	Login(userLoginRequest *schema.UserLoginRequest) (*userSchema.Users, error)
-	Register(userRegisterRequest *schema.UserRegisterRequest) (*userSchema.Users, error)
+	Login(userLoginRequest *schema.UserLoginRequest) (*schema.UserAuthResponse, error)
+	Register(userRegisterRequest *userSchema.UserRequest) error
 	Logout(userID int) error
 }
