@@ -39,7 +39,7 @@ func InitContainer(db *sql.DB) *http.ServeMux {
 	userRouters.NewUserRouters(uCtrl).RegisterUserRouter(mux)
 
 	// injection masing-masing pada auth
-	authSvc := authServices.NewAuthService(uRepo)
+	authSvc := authServices.NewAuthService(uRepo, "")
 	authCtrl := authController.NewAuthController(authSvc)
 	authRouters.NewAuthRouters(authCtrl).RegisterAuthRouter(mux)
 
