@@ -13,20 +13,44 @@ func NewOrderRepository(db *sql.DB) OrderRepositoryInterface {
 	return &orderRepository{db: db}
 }
 
-func (repo *orderRepository) CreateOrder(id int) (*schema.Order, error) {
-	stmt := "INSERT INTO orders ()"
+func (repo *orderRepository) CreateOrder(id int) error {
+	stmt := "INSERT INTO orders (user_id, total_price) VALUES ($1, $2)"
 
-	_, err := repo.db.Exec(stmt, id)
+	_, err := repo.db.Exec(stmt, id, id)
+	if err != nil {
+		return err
+	}
+
+	if err != nil {
+		return nil
+	}
+
+	return nil
+}
+
+// catatan [Agung dev] : Sebaiknya menggunakan pagnation jangan langsung ambil semuanya
+func (repo *orderRepository) GetAllOrder() ([]*schema.Order, error) {
+	var result []*schema.Order
+
+	stmt := "SELECT * FROM orders"
+	rows, err := repo.db.Query(stmt)
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, nil
-}
+	defer rows.Close()
 
-func (repo *orderRepository) GetAllOrder() ([]*schema.Order, error) {
+	for rows.Next() {
+		var ordersData schema.Order
 
-	return nil, nil
+		order, err := rows.Scan(ordersData.ID)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, order)
+	}
+
+	return result, nil
 }
 
 func (repo *orderRepository) UpdateOrder(id int) (*schema.Order, error) {

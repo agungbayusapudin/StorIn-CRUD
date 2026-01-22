@@ -51,7 +51,9 @@ func InitContainer(db *sql.DB) *http.ServeMux {
 
 	// injection masing-masing pada order
 	oRepo := orderRepo.NewOrderRepository(db)
-	oSvc := orderService.NewOrderService(oRepo)
+	oRepoDetail := orderRepo.NewOrderDetailRepository(db)
+
+	oSvc := orderService.NewOrderService(oRepo, oRepoDetail)
 	oCtrl := orderController.NewOrderControllerInterface(oSvc)
 	orderRouters.NewOrderRouters(oCtrl).RegisterOrderRouter(mux)
 

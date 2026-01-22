@@ -6,11 +6,15 @@ import (
 )
 
 type orderService struct {
-	repo repository.OrderRepositoryInterface
+	orderRepo       repository.OrderRepositoryInterface
+	orderRepoDetail repository.OrderDetailRepositoryInterface
 }
 
-func NewOrderService(repo repository.OrderRepositoryInterface) OrderServiceInterface {
-	return &orderService{repo: repo}
+func NewOrderService(repo repository.OrderRepositoryInterface, repoDetail repository.OrderDetailRepositoryInterface) OrderServiceInterface {
+	return &orderService{
+		orderRepo:       repo,
+		orderRepoDetail: repoDetail,
+	}
 }
 
 func (serv *orderService) CreateOrders(id int) (*schema.Order, error) {
