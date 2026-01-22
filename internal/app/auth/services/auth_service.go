@@ -50,5 +50,6 @@ func (svc *authService) Register(userRegisterReq *userSchema.UserRequest) error 
 }
 
 func (svc *authService) Logout(userID int) error {
+	// logout haurs menggunakan storage sementara
 	return nil
 }
