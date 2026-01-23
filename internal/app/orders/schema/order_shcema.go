@@ -17,6 +17,8 @@ type OrderDetail struct {
 }
 
 type CreateOrderRequest struct {
+	UserId          int     `json:"user_id"`
+	Status          bool    `json:"status"`
 	OrderId         int     `json:"order_id"`
 	ProductId       int     `json:"product_id"`
 	Quantity        int     `json:"quantity"`

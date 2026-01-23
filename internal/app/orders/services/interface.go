@@ -5,13 +5,12 @@ import "videocall/internal/app/orders/schema"
 type OrderServiceInterface interface {
 
 	// user member
-	CreateOrders(id int) (*schema.Order, error)
+	CreateOrders(orderRequest *schema.CreateOrderRequest) error
 	GetAllOrder() ([]*schema.Order, error)
 	GetOrderById(id int) (*schema.Order, error)
-	CancelOrder(id int) error
+	CancelOrder(id int, status *schema.UpdateStatusOrderRequest) (*schema.Order, error)
 
 	// admin
-	GetOrderStatus(id int) (*schema.Order, error)
 	UpdateOrderStatus(id int, status *schema.UpdateStatusOrderRequest) (*schema.Order, error)
 }
 

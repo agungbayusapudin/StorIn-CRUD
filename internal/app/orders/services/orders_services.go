@@ -17,26 +17,58 @@ func NewOrderService(repo repository.OrderRepositoryInterface, repoDetail reposi
 	}
 }
 
-func (serv *orderService) CreateOrders(id int) (*schema.Order, error) {
-	return nil, nil
-}
+func (serv *orderService) CreateOrders(orderRequest *schema.CreateOrderRequest) error {
+	// melakukan perkalian(*) qty dengan harga product = totalPrice
+	totalPrice := float64(orderRequest.Quantity) * orderRequest.PriceAtPurchase
 
-func (serv *orderService) GetAllOrder() ([]*schema.Order, error) {
-	return nil, nil
-}
+	err := serv.orderRepo.CreateOrder(orderRequest.UserId, float64(totalPrice))
+	if err != nil {
+		return err
+	}
 
-func (serv *orderService) GetOrderById(id int) (*schema.Order, error) {
-	return nil, nil
-}
+	err = serv.orderRepoDetail.CreateOrderDetail(orderRequest)
+	if err != nil {
+		return err
+	}
 
-func (serv *orderService) CancelOrder(id int) error {
 	return nil
 }
 
-func (serv *orderService) GetOrderStatus(id int) (*schema.Order, error) {
-	return nil, nil
+func (serv *orderService) GetAllOrder() ([]*schema.Order, error) {
+	data, err := serv.orderRepo.GetAllOrder()
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
 
+func (serv *orderService) GetOrderById(id int) (*schema.Order, error) {
+	data, err := serv.orderRepo.GetOrderById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+func (serv *orderService) CancelOrder(id int, status *schema.UpdateStatusOrderRequest) (*schema.Order, error) {
+	// melakukan update status ordernya
+	data, err := serv.orderRepo.UpdateStatusOrder(id, status)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+// untuk admin
+// tambahkan agar lengkap dalam mengembalikan datanya
 func (serv *orderService) UpdateOrderStatus(id int, status *schema.UpdateStatusOrderRequest) (*schema.Order, error) {
-	return nil, nil
+	data, err := serv.orderRepo.UpdateStatusOrder(id, status)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

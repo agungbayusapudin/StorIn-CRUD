@@ -13,10 +13,10 @@ func NewOrderRepository(db *sql.DB) OrderRepositoryInterface {
 	return &orderRepository{db: db}
 }
 
-func (repo *orderRepository) CreateOrder(id int, totalPrice int) error {
+func (repo *orderRepository) CreateOrder(userId int, totalPrice float64) error {
 	stmt := "INSERT INTO orders (user_id, total_price) VALUES ($1, $2)"
 
-	_, err := repo.db.Exec(stmt, id, totalPrice)
+	_, err := repo.db.Exec(stmt, userId, totalPrice)
 	if err != nil {
 		return err
 	}
