@@ -3,9 +3,8 @@ package repository
 import "videocall/internal/app/orders/schema"
 
 type OrderRepositoryInterface interface {
-	CreateOrder(id int) error
+	CreateOrder(id int, totalPrice int) error
 	GetAllOrder() ([]*schema.Order, error)
-	UpdateOrder(id int) (*schema.Order, error)
 	DeleteOrer(id int) error
 	UpdateStatusOrder(id int, status *schema.UpdateStatusOrderRequest) (*schema.Order, error)
 	GetOrderById(id int) (*schema.Order, error)

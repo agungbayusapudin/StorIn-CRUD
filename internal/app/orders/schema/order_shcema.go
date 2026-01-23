@@ -1,7 +1,11 @@
 package schema
 
 type Order struct {
-	ID int `json:"id"`
+	ID        int    `json:"id"`
+	UserId    int    `json:"user_id"`
+	Status    bool   `json:"status"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
 }
 
 type OrderDetail struct {
