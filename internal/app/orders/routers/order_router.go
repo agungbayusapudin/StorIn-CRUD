@@ -19,6 +19,4 @@ func (r *OrderRouter) RegisterOrderRouter(mux *http.ServeMux) {
 	mux.HandleFunc("POST /orders", r.controller.CreateOrders)
 	mux.HandleFunc("PATCH /orders", r.controller.CancelOrder)
 	mux.HandleFunc("PATCH /orders", r.controller.UpdateStatusOrder)
-	mux.HandleFunc("GET /orders/status", r.controller.GetOrderStatus)
-
 }
