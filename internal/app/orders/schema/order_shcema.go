@@ -9,11 +9,22 @@ type Order struct {
 }
 
 type OrderDetail struct {
-	ID int `json:"id"`
+	ID              int     `json:"id"`
+	OrderId         int     `json:"order_id"`
+	ProductId       int     `json:"product_id"`
+	Quantity        int     `json:"quantity"`
+	PriceAtPurchase float64 `json:"price_at_purchase"`
+}
+
+type CreateOrderRequest struct {
+	OrderId         int     `json:"order_id"`
+	ProductId       int     `json:"product_id"`
+	Quantity        int     `json:"quantity"`
+	PriceAtPurchase float64 `json:"price_at_purchase"`
 }
 
 type UpdateStatusOrderRequest struct {
-	ID int `json:"id"`
+	Status bool `json:"status"`
 }
 
 type UpdateStatusOrderDetailRequest struct {

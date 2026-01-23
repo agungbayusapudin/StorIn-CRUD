@@ -40,7 +40,7 @@ func (repo *orderRepository) GetAllOrder() ([]*schema.Order, error) {
 		var ordersData schema.Order
 
 		// memasukan ke dalam variabel orderData yang memiliki shcmea order
-		err := rows.Scan(&ordersData.ID, &ordersData.UserId, &ordersData.Status, &ordersData.CreatedAt, &ordersData.UpdatedAt)
+		err = rows.Scan(&ordersData.ID, &ordersData.UserId, &ordersData.Status, &ordersData.CreatedAt, &ordersData.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
@@ -65,9 +65,9 @@ func (repo *orderRepository) DeleteOrer(id int) error {
 func (repo *orderRepository) UpdateStatusOrder(id int, status *schema.UpdateStatusOrderRequest) (*schema.Order, error) {
 	var order schema.Order
 
-	stmt := "UPDATE INTO orders SET status = 'SUCCES'. WHERE id = $1 RETURNING *"
+	stmt := "UPDATE INTO orders SET status = $1. WHERE id = $2 RETURNING *"
 
-	data, err := repo.db.Query(stmt, id)
+	data, err := repo.db.Query(stmt, status.Status, id)
 	if err != nil {
 		return nil, err
 	}

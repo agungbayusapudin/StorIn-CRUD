@@ -11,10 +11,8 @@ type OrderRepositoryInterface interface {
 }
 
 type OrderDetailRepositoryInterface interface {
-	CreateOrderDetail(id int) (*schema.OrderDetail, error)
+	CreateOrderDetail(orderDetailReq *schema.CreateOrderRequest) error
 	GetAllOrderDetail() ([]*schema.OrderDetail, error)
-	UpdateOrderDetail(id int) (*schema.OrderDetail, error)
 	DeleteOrerDetail(id int) error
-	UpdateStatusOrderDetail(id int, status *schema.UpdateStatusOrderDetailRequest) (*schema.OrderDetail, error)
 	GetOrderByIdDetail(id int) (*schema.OrderDetail, error)
 }
