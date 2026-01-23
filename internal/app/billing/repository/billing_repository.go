@@ -9,7 +9,7 @@ type BillingRepository struct {
 	db *sql.DB
 }
 
-func NewBillingRepository(db *sql.DB) *BillingRepository {
+func NewBillingRepository(db *sql.DB) BillingRepositoryInterface {
 	return &BillingRepository{db: db}
 }
 
@@ -17,10 +17,6 @@ func (repo *BillingRepository) CreateInvoice(userId int, paymentReq *schema.Crea
 	return nil, nil
 }
 func (repo *BillingRepository) GetInvoice(invoiceId int) (*schema.Invoice, error) {
-	return nil, nil
-}
-
-func (repo *BillingRepository) ListInvoices(userId int) ([]*schema.Invoice, error) {
 	return nil, nil
 }
 

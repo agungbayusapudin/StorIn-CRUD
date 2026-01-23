@@ -15,3 +15,10 @@ type BillingServiceInterface interface {
 	VerifyPayment(userId int, paymentId string) error
 	UpdatePaymentStatus(userId int, status string) error
 }
+
+type BillingDetailServiceInterface interface {
+	InitialPayment(userId int, paymentReq *schema.CreateInvoiceRequest) error
+	CancelPayment(userId int) error
+	VerifyPayment(userId int, paymentId string) error
+	UpdatePaymentStatus(userId int, status string) error
+}
