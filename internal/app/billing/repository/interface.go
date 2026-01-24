@@ -10,8 +10,7 @@ type BillingRepositoryInterface interface {
 }
 
 type BillingDetailRepositoryInterface interface {
-	CreateInvoice(userId int, paymentReq *schema.CreateInvoiceRequest) (*schema.Invoice, error)
-	GetInvoice(invoiceId int) (*schema.Invoice, error)
-	UpdateInvoiceStatus(invoiceId int, status string) error
+	CreateInvoice(paymentReq *schema.CreateInvoiceDetailRequest) error
+	GetInvoice(idDetailInvoice int) (*schema.InvoiceDetail, error)
 	DeleteInvoice(invoiceId int) error
 }
