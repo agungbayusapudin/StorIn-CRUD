@@ -1,0 +1,1 @@
+reflex -s -r '\.go$$' go run api/main.go
