@@ -54,3 +54,7 @@ type InitialPaymantRequest struct {
 	UnitPrice            float64 `json:"unit_price"`
 	TotalPrice           float64 `json:"total_price"`
 }
+
+type VerifyPaymentRequest struct {
+	Status string `json:"status"`
+}
