@@ -5,7 +5,7 @@ import "videocall/internal/app/billing/schema"
 type BillingRepositoryInterface interface {
 	CreateInvoice(invoice_number string, paymentReq *schema.CreateInvoiceRequest) (int, error)
 	GetInvoice(invoiceId int) (*schema.Invoice, error)
-	UpdateInvoiceStatus(invoiceId int, status string) error
+	UpdateInvoiceStatus(invoiceId int, status *schema.VerifyPaymentRequest) error
 	DeleteInvoice(invoiceId int) error
 }
 

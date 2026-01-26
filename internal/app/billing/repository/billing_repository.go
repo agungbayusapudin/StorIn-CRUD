@@ -39,6 +39,7 @@ func (repo *BillingRepository) CreateInvoice(invoice_number string, paymentReq *
 
 	return NewIdInvoice, nil
 }
+
 func (repo *BillingRepository) GetInvoice(invoiceId int) (*schema.Invoice, error) {
 	var data schema.Invoice
 
@@ -67,7 +68,7 @@ func (repo *BillingRepository) GetInvoice(invoiceId int) (*schema.Invoice, error
 	return &data, nil
 }
 
-func (repo *BillingRepository) UpdateInvoiceStatus(invoiceId int, status string) error {
+func (repo *BillingRepository) UpdateInvoiceStatus(invoiceId int, status *schema.VerifyPaymentRequest) error {
 	stmt := "UPDATE invoice SET status = $1 WHERE id = $2"
 
 	_, err := repo.db.Exec(stmt, status, invoiceId)

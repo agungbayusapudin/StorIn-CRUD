@@ -17,5 +17,4 @@ func (router *BillingRouter) RegisterBillingRouter(mux *http.ServeMux) {
 	mux.HandleFunc("POST /billing/initial", router.ctrl.InitialPayment)
 	mux.HandleFunc("POST /billing/cancel", router.ctrl.CancelPayment)
 	mux.HandleFunc("POST /billing/verify", router.ctrl.VerifyPayment)
-	mux.HandleFunc("POST /billing/update-status", router.ctrl.UpdatePaymentStatus)
 }

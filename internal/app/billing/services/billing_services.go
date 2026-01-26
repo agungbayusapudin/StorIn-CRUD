@@ -70,7 +70,7 @@ func (svc *billingService) CancelPayment(invoiceId int) error {
 	return nil
 }
 
-func (svc *billingService) VerifyPayment(invoiceId int, status string) error {
+func (svc *billingService) VerifyPayment(invoiceId int, status *schema.VerifyPaymentRequest) error {
 	err := svc.repoBilling.UpdateInvoiceStatus(invoiceId, status)
 	if err != nil {
 		return err
