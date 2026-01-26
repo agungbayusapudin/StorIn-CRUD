@@ -14,10 +14,12 @@ func NewBillingRepository(db *sql.DB) BillingRepositoryInterface {
 	return &BillingRepository{db: db}
 }
 
-func (repo *BillingRepository) CreateInvoice(userId int, invoice_number string, paymentReq *schema.CreateInvoiceRequest) error {
-	stmt := "INSERT INTO invoices (invoice_number, customer_id, issue_date, due_date, subtotal, taxt_total, discount_total, grand_total, status, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
+func (repo *BillingRepository) CreateInvoice(invoice_number string, paymentReq *schema.CreateInvoiceRequest) (int, error) {
+	var NewIdInvoice int
 
-	_, err := repo.db.Exec(stmt,
+	stmt := "INSERT INTO invoices (invoice_number, customer_id, issue_date, due_date, subtotal, taxt_total, discount_total, grand_total, status, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id"
+
+	data, err := repo.db.Query(stmt,
 		invoice_number,
 		paymentReq.CustomerId,
 		time.Now(),
@@ -30,10 +32,12 @@ func (repo *BillingRepository) CreateInvoice(userId int, invoice_number string, 
 		time.Now(),
 	)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	err = data.Scan(&NewIdInvoice)
+
+	return NewIdInvoice, nil
 }
 func (repo *BillingRepository) GetInvoice(invoiceId int) (*schema.Invoice, error) {
 	var data schema.Invoice
