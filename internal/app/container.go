@@ -59,7 +59,8 @@ func InitContainer(db *sql.DB) *http.ServeMux {
 
 	// injection masing-masing pada billing
 	billRepo := billingRepo.NewBillingRepository(db)
-	billSvc := billingService.NewBillingService(billRepo)
+	billRepoDetail := billingRepo.NewBillingDetailRepository(db)
+	billSvc := billingService.NewBillingService(billRepo, billRepoDetail)
 	billCtrl := billingController.NewBillingController(billSvc)
 	billingRouters.NewBillingRouter(billCtrl).RegisterBillingRouter(mux)
 
